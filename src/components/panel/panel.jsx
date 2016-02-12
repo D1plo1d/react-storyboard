@@ -57,10 +57,12 @@ export default class Panel extends React.Component {
           onChange={this._onDragChange}
         >
           <div ref="header" style={{
-            background: "#555",
+            background: "#444",
             color: "white",
             padding: "5 5",
+            fontFamily: "sans-serif",
             fontSize: "15px",
+            fontWeight: "lighter",
             letterSpacing: "0.1em",
             userSelect: "none",
             "WebkitUserSelect": "none",
