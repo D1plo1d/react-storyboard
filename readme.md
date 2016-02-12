@@ -1,6 +1,6 @@
 ## Installation
 
-1. Install npm and nodejs
+1. npm install `react-storyboard`
 2. Run `npm install -g webpack webpack-dev-server && npm install`
 
 

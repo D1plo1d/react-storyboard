@@ -1,7 +1,8 @@
 {
-  "name": "resume",
-  "version": "0.0.1",
-  "private": true,
+  "name": "react-storyboard",
+  "version": "0.1.0",
+  "private": false,
+  "main": "src/index.jsx"
   "scripts": {
     "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config=./webpack.example.config.js"
   },
