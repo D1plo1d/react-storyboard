@@ -30,10 +30,8 @@ export default class Panel extends React.Component {
       // TODO: scale drag and drop by zoom factor
       nextState.x = this.state.dragStart.x + drag.deltaX
       nextState.y = this.state.dragStart.y + drag.deltaY
-      if (drag.isDragging === false && this.state.drag.isDragging === true) {
-        nextState.x -= nextState.x % GRID_SIZE
-        nextState.y -= nextState.y % GRID_SIZE
-      }
+      nextState.x -= nextState.x % GRID_SIZE
+      nextState.y -= nextState.y % GRID_SIZE
     }
     this.setState(nextState)
   }
