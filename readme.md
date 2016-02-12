@@ -2,7 +2,7 @@ Like XCode Storyboards but for React and more useful.
 
 ## Installation
 
-1. npm install `react-storyboard`
+1. `npm install react-storyboard`
 
 ## Example Useage
 
@@ -18,7 +18,7 @@ export default class ExampleStoryboard extends React.Component {
         <Panel name="Comment">
           <Comment
             username="Rob"
-            title="React Storyboard is awsome!"
+            title="React Storyboard is awesome!"
             content={loremIpsum}
           />
         </Panel>
