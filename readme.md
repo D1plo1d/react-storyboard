@@ -1,3 +1,5 @@
+Like XCode Storyboards but for React and more useful.
+
 ## Installation
 
 1. npm install `react-storyboard`
