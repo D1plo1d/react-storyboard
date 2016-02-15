@@ -1,4 +1,5 @@
 var path = require("path")
+require("./src/server.js")
 
 module.exports = {
   entry: [

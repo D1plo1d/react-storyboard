@@ -1,32 +1,32 @@
 import React from "react"
-import connect from "react-redux"
+import {Provider, connect} from "react-redux"
 import PanAndZoom from "../pan_and_zoom/pan_and_zoom.jsx"
 import backgroundImage from "./graphy_@2X.png"
 import store from "../../reducers/storyboard.js"
 
-@((Component) => (props) =>
+@((Component) => (ownProps) => // eslint-disable-line react/display-name
   <Provider store={store}>
-    <Component {...props}/>
+    <Component {...ownProps}/>
   </Provider>
 )
 @connect(
-  (state, ownProps) => {
+  (state) => {
     return {
       connections: state.connections,
     }
   },
 )
 export default class Storyboard extends React.Component {
+  displayName = "Storyboard"
 
   state = {
     x: 0,
     y: 0,
     zoomFactor: 0,
-    drag: PanAndZoom.defaultProps.drag
   }
 
   static childContextTypes = {
-    storyboard: React.PropTypes.object
+    storyboard: React.PropTypes.object,
   }
 
   getChildContext() {

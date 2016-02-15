@@ -1,4 +1,5 @@
 import React from "react"
+import {connect} from "react-redux"
 // import clickDrag from "../../higher_order_components/click_drag.jsx"
 import Drag from "../pan_and_zoom/drag.jsx"
 
@@ -6,26 +7,20 @@ let GRID_SIZE = 20
 
 @connect(
   (state, ownProps) => {
-    let {x, y} = state.panels[ownProps.id]
+    let {x, y} = state.panels[ownProps.id] || {x: 0, y: 0}
     return {x, y}
   },
-  (dispatch, ownProps) => {
+  (dispatch) => {
     return {
-      onMove: (x, y) => dispatch({action: "MOVE_PANEL", x, y})
+      onMove: (action) => dispatch(Object.assign(action, {type: "MOVE_PANEL"})),
     }
   }
 )
 export default class Panel extends React.Component {
-
-  state = {
-    x: 0,
-    y: 0,
-    dragStart: {x: 0, y: 0},
-    drag: Drag.defaultProps.data,
-  }
+  displayName = "Panel"
 
   static contextTypes = {
-    storyboard: React.PropTypes.object
+    storyboard: React.PropTypes.object,
   }
 
   _child() {
@@ -33,22 +28,11 @@ export default class Panel extends React.Component {
   }
 
   _onDragChange = (drag) => {
-    // TODO: redux-ify and move drag data back into drag.jsx's state:
-    // this.props.onMove({
-    //   x: drag.x % GRID_SIZE,
-    //   y: drag.y % GRID_SIZE
-    // })
-    let nextState = {drag}
-    if (drag.isDragging === true && this.state.drag.isDragging !== true) {
-      nextState.dragStart = {x: this.state.x, y: this.state.y}
-    }
-    else {
-      nextState.x = this.state.dragStart.x + drag.deltaX
-      nextState.y = this.state.dragStart.y + drag.deltaY
-      nextState.x -= nextState.x % GRID_SIZE
-      nextState.y -= nextState.y % GRID_SIZE
-    }
-    this.setState(nextState)
+    this.props.onMove({
+      id: this.props.id,
+      x: drag.x - drag.x % GRID_SIZE,
+      y: drag.y - drag.y % GRID_SIZE,
+    })
   }
 
   render() {
@@ -62,11 +46,13 @@ export default class Panel extends React.Component {
         overflow: "hidden",
         border: "2px solid #555",
         background: "white",
+        "WebkitUserSelect": "none",
       }}>
         {/*TODO: the header should be the only draggable area*/}
         <Drag
+          x={this.props.x}
+          y={this.props.y}
           scale={this.context.storyboard.scale}
-          data={this.state.drag}
           onChange={this._onDragChange}
         >
           <div ref="header" style={{
@@ -78,10 +64,9 @@ export default class Panel extends React.Component {
             fontWeight: "lighter",
             letterSpacing: "0.1em",
             userSelect: "none",
-            "WebkitUserSelect": "none",
             cursor: "pointer",
           }}>
-            {this.props.name}
+            {this.props.id}
           </div>
         </Drag>
         <div ref="content">

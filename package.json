@@ -4,7 +4,7 @@
   "private": false,
   "main": "src/index.jsx",
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config=./webpack.example.config.js"
+    "start": "STORYBOARD_PATH=./example/config.yml ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config=./webpack.example.config.js"
   },
   "dependencies": {
     "webpack": "*",
@@ -26,9 +26,17 @@
     "react-css-modules": "*",
     "react": "0.14.3",
     "react-dom": "0.14.3",
+    "eslint": "2.0.0-beta.3",
+    "eslint-plugin-react": "3.16.1",
+    "babel-eslint": "*",
     "classnames": "*",
     "bootstrap": "*",
-    "react-bootstrap": "*"
+    "react-bootstrap": "*",
+    "react-redux": "4.4.0",
+    "redux": "*",
+    "socket.io": "*",
+    "socket.io-client": "*",
+    "js-yaml": "*"
   },
   "engines": {
     "node": "~0.12.x",

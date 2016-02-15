@@ -6,6 +6,8 @@ import CommentForm from "./comment_form.jsx"
 import loremIpsum from "./lorem-ipsum.jsx"
 
 export default class ExampleStoryboard extends React.Component {
+  displayName = "ExampleStoryboard"
+
   render() {
     return (
       <Storyboard>

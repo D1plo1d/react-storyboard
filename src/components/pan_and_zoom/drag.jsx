@@ -2,20 +2,28 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 export default class Drag extends React.Component {
+  displayName = "Drag"
+
+  static propTypes = {
+    touch: React.PropTypes.bool.isRequired,
+    scale: React.PropTypes.number.isRequired,
+    x: React.PropTypes.number.isRequired,
+    y: React.PropTypes.number.isRequired,
+  }
 
   static defaultProps = {
     touch: true,
     scale: 1,
-    data: {
-      isDragging: false,
-      isMoving: false,
-      dragStartX: 0,
-      dragStartY: 0,
-      x: 0,
-      y: 0,
-      deltaX: 0,
-      deltaY: 0,
-    },
+  }
+
+  state = {
+    simulatedMouseDown: false,
+    isDragging: false,
+    isMoving: false,
+    x: 0,
+    y: 0,
+    deltaX: 0,
+    deltaY: 0,
   }
 
   componentDidMount() {
@@ -28,9 +36,9 @@ export default class Drag extends React.Component {
     this._toggleListeners("off", this._domNode(), this._localMouseEvents())
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data.isDragging !== this.props.data.isDragging) {
-      let onOrOff = nextProps.data.isDragging ? "on" : "off"
+  componentWillUpdate(_, nextState) {
+    if (nextState.isDragging !== this.state.isDragging) {
+      let onOrOff = nextState.isDragging ? "on" : "off"
       this._toggleListeners(onOrOff, document, this._mouseMoveEvents())
     }
   }
@@ -64,17 +72,17 @@ export default class Drag extends React.Component {
     for(let k in events) domElement[fnName](k, events[k])
   }
 
-  _onChange(nextProps) {
-    this.props.onChange(Object.assign({}, this.props.data, nextProps))
+  _onChange(nextState) {
+    this.setState(nextState, () => this.props.onChange(this.state))
   }
 
   _startDrag(x, y) {
-    let scale = this.context.scale
+    let scale = this.props.scale
     this._onChange({
       isDragging: true,
       isMoving: false,
-      x: x * scale,
-      y: y * scale,
+      x: this.props.x * scale,
+      y: this.props.y * scale,
       unscaledX: x,
       unscaledY: y,
       deltaX: 0,
@@ -94,7 +102,7 @@ export default class Drag extends React.Component {
   }
 
   _onMouseUp = (e) => {
-    if(this.props.data.isDragging || this.props.simulatedMouseDown) {
+    if(this.state.isDragging || this.state.simulatedMouseDown) {
       this._onChange({
         simulatedMouseDown: false,
         isDragging: false,
@@ -106,22 +114,26 @@ export default class Drag extends React.Component {
   }
 
   _onMouseMove = (e) => {
-    if(this.props.data.isDragging || this.props.simulatedMouseDown) {
+    if(this.state.isDragging || this.props.simulatedMouseDown) {
       var pt = (e.changedTouches && e.changedTouches[0]) || e
       let scale = this.props.scale
-      let previousData = this.props.data
-      if (this.props.simulatedMouseDown && !this.props.data.isDragging) {
+      let previousState = this.state
+      if (this.props.simulatedMouseDown && !this.state.isDragging) {
         this._onMouseDown(e)
       }
       else {
         let x = pt.clientX
         let y = pt.clientY
+        let scaledMovement = {
+          x: (x - previousState.unscaledX) / scale,
+          y: (y - previousState.unscaledY) / scale,
+        }
         this._onChange({
           isMoving: true,
-          deltaX: (x - previousData.unscaledX) / scale + previousData.deltaX,
-          deltaY: (y - previousData.unscaledY) / scale + previousData.deltaY,
-          x: x / scale,
-          y: y / scale,
+          deltaX: scaledMovement.x + previousState.deltaX,
+          deltaY: scaledMovement.y + previousState.deltaY,
+          x: scaledMovement.x + previousState.x,
+          y: scaledMovement.y + previousState.y,
           unscaledX: x,
           unscaledY: y,
         })

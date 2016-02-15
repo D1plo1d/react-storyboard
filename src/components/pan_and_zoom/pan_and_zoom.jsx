@@ -2,6 +2,7 @@ import React from "react"
 import Drag from "./drag.jsx"
 
 export default class PanAndZoom extends React.Component {
+  displayName = "PanAndZoom"
 
   static defaultProps = {
     x: 0,
@@ -26,18 +27,8 @@ export default class PanAndZoom extends React.Component {
     })
   }
 
-  _onDragChange = (drag) => {
-    let nextState = {drag}
-    if (drag.isDragging === true && this.state.drag.isDragging !== true) {
-      nextState.dragStart = {x: this.props.x, y: this.props.y}
-    }
-    else {
-      this.props.onChange({
-        x: this.state.dragStart.x + drag.deltaX,
-        y: this.state.dragStart.y + drag.deltaY,
-      })
-    }
-    this.setState(nextState)
+  _onDragChange = ({x, y}) => {
+    this.props.onChange({x, y})
   }
 
   _transform() {
@@ -50,6 +41,8 @@ export default class PanAndZoom extends React.Component {
   render() {
     return (
       <Drag
+        x={this.props.x}
+        y={this.props.y}
         data={this.state.drag}
         onChange={this._onDragChange}
       >
