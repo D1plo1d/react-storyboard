@@ -4,6 +4,17 @@ import Drag from "../pan_and_zoom/drag.jsx"
 
 let GRID_SIZE = 20
 
+@connect(
+  (state, ownProps) => {
+    let {x, y} = state.panels[ownProps.id]
+    return {x, y}
+  },
+  (dispatch, ownProps) => {
+    return {
+      onMove: (x, y) => dispatch({action: "MOVE_PANEL", x, y})
+    }
+  }
+)
 export default class Panel extends React.Component {
 
   state = {
@@ -22,12 +33,16 @@ export default class Panel extends React.Component {
   }
 
   _onDragChange = (drag) => {
+    // TODO: redux-ify and move drag data back into drag.jsx's state:
+    // this.props.onMove({
+    //   x: drag.x % GRID_SIZE,
+    //   y: drag.y % GRID_SIZE
+    // })
     let nextState = {drag}
     if (drag.isDragging === true && this.state.drag.isDragging !== true) {
       nextState.dragStart = {x: this.state.x, y: this.state.y}
     }
     else {
-      // TODO: scale drag and drop by zoom factor
       nextState.x = this.state.dragStart.x + drag.deltaX
       nextState.y = this.state.dragStart.y + drag.deltaY
       nextState.x -= nextState.x % GRID_SIZE
@@ -42,8 +57,8 @@ export default class Panel extends React.Component {
         width: 300,
         height: 300,
         position: "absolute",
-        left: this.state.x,
-        top: this.state.y,
+        left: this.props.x,
+        top: this.props.y,
         overflow: "hidden",
         border: "2px solid #555",
         background: "white",

@@ -1,7 +1,21 @@
 import React from "react"
+import connect from "react-redux"
 import PanAndZoom from "../pan_and_zoom/pan_and_zoom.jsx"
 import backgroundImage from "./graphy_@2X.png"
+import store from "../../reducers/storyboard.js"
 
+@((Component) => (props) =>
+  <Provider store={store}>
+    <Component {...props}/>
+  </Provider>
+)
+@connect(
+  (state, ownProps) => {
+    return {
+      connections: state.connections,
+    }
+  },
+)
 export default class Storyboard extends React.Component {
 
   state = {

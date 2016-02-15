@@ -9,7 +9,11 @@ export default class ExampleStoryboard extends React.Component {
   render() {
     return (
       <Storyboard>
-        <Panel name="Comment">
+        {/*
+          Panel IDs can be any string. They are used to track the panel in the
+          storyboard.yml and are displayed at the top of each panel.
+        */}
+        <Panel id="Comment:user">
           <Comment
             username="Rob"
             title="React Storyboard is awesome!"
@@ -17,7 +21,15 @@ export default class ExampleStoryboard extends React.Component {
           />
         </Panel>
 
-        <Panel name="CommentForm">
+        <Panel id="Comment:annonomous">
+          <Comment
+            username={null}
+            title="React Storyboard is awesome!"
+            content={loremIpsum}
+          />
+        </Panel>
+
+        <Panel id="CommentForm">
           <CommentForm/>
         </Panel>
 
