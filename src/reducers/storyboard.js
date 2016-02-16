@@ -15,7 +15,7 @@ let initialState = {
   },
   connections: {
     // {
-    //   panelIds: [String, String]
+    //   panelIDs: [String, String]
     // }
   },
 }
@@ -24,7 +24,7 @@ let storyBoard = function(state = initialState, action) {
   switch (action.type) {
   case 'MOVE_PANEL':
     let {x, y} = action
-    let state = Object.assign({}, state)
+    state = Object.assign({}, state)
     state.panels = Object.assign({}, state.panels)
     state.panels[action.id] = {x, y}
     state.pendingChanges = true
@@ -33,6 +33,12 @@ let storyBoard = function(state = initialState, action) {
     state = Object.assign({}, state, action.state)
     state.initialized = true
     state.saveInterval = setInterval(() => store.dispatch({type: "SAVE"}), 500)
+    return state
+  case 'ADD_CONNECTION':
+    let {panelIDs} = action
+    state = Object.assign({}, state)
+    state.connections = Object.assign({}, state.connections)
+    state.connections[action.id] = {panelIDs}
     return state
   case 'SAVE':
     let {panels, connections} = state

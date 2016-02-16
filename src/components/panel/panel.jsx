@@ -1,6 +1,5 @@
 import React from "react"
 import {connect} from "react-redux"
-// import clickDrag from "../../higher_order_components/click_drag.jsx"
 import Drag from "../pan_and_zoom/drag.jsx"
 
 let GRID_SIZE = 20
@@ -48,7 +47,6 @@ export default class Panel extends React.Component {
         background: "white",
         "WebkitUserSelect": "none",
       }}>
-        {/*TODO: the header should be the only draggable area*/}
         <Drag
           x={this.props.x}
           y={this.props.y}
