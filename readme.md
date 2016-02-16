@@ -1,4 +1,4 @@
-Like XCode Storyboards but for React and more useful.
+Like XCode Storyboards but for React and with more awesome.
 
 ## Installation
 

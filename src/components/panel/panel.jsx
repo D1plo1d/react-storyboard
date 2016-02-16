@@ -1,6 +1,5 @@
 import React from "react"
 import {connect} from "react-redux"
-// import clickDrag from "../../higher_order_components/click_drag.jsx"
 import Drag from "../pan_and_zoom/drag.jsx"
 import linkIcon from "./link_icon.svg"
 
@@ -65,7 +64,6 @@ export default class Panel extends React.Component {
           border: `${BORDER_WIDTH}px solid ${BORDER_COLOR}`,
           background: "white",
         }}>
-          {/*TODO: the header should be the only draggable area*/}
           <Drag
             x={this.props.x}
             y={this.props.y}
