@@ -38,7 +38,8 @@
     "redux": "*",
     "socket.io": "*",
     "socket.io-client": "*",
-    "js-yaml": "*"
+    "js-yaml": "*",
+    "mathjs": "*"
   },
   "engines": {
     "node": "~0.12.x",

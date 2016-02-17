@@ -54,6 +54,20 @@ let storyBoard = function(state = initialState, action) {
     state = Object.assign({}, state)
     state.connections = Object.assign({}, state.connections)
     state.connections[id] = {id, panelIDs}
+    // remove duplicate connections
+    let nextConnections = {}
+    let panelIDSort = (a, b) => a.localeCompare(b)
+    let connectionPanelHashes = Object.values(state.connections).map(
+      ({panelIDs}) => JSON.stringify(panelIDs.sort(panelIDSort))
+    )
+    Object.values(state.connections).forEach((connection, i) => {
+      panelIDs = connection.panelIDs.sort(panelIDSort)
+      if (connectionPanelHashes.indexOf(JSON.stringify(panelIDs)) === i) {
+        nextConnections[connection.id] = connection
+      }
+    })
+    state.connections = nextConnections
+    // trigger a save next interval
     state.pendingChanges = true
     return state
   case 'SAVE':

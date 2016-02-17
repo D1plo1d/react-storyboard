@@ -57,6 +57,7 @@ export default class Panel extends React.Component {
         position: "absolute",
         left: this.props.x,
         top: this.props.y,
+        zIndex: 2,
         "WebkitUserSelect": "none",
       }}>
         <div style={{

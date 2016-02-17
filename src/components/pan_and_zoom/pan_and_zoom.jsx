@@ -1,5 +1,6 @@
 import React from "react"
 import Drag from "./drag.jsx"
+import math from "mathjs/dist/math.js"
 
 export default class PanAndZoom extends React.Component {
   displayName = "PanAndZoom"
@@ -31,14 +32,35 @@ export default class PanAndZoom extends React.Component {
     this.props.onChange({x, y})
   }
 
+  _scale() {
+    return this.props.zoomScaling(this.props.zoomFactor)
+  }
+
   _transform() {
+    let translate = math.matrix([
+      [1, 0, this.props.x],
+      [0, 1, this.props.y],
+      [0, 0, 1],
+    ])
+    let scale = math.matrix([
+      [this._scale(), 0, 0],
+      [0, this._scale(), 0],
+      [0, 0, 1],
+    ])
+    let matrix = math.multiply(translate, scale)
+    console.log(translate.toArray())
     return (
-      `translate(${this.props.x}px, ${this.props.y}px) ` +
-      `scale(${this.props.zoomScaling(this.props.zoomFactor)})`
+      `matrix(${
+        translate.toArray().reduce((a, b) => a.concat(b)).slice(0, 6).join(",")
+      })`
     )
+      // `scale(${scale}) ` +
+      // `translate(${this.props.x / scale}px, ${this.props.y / scale}px) `
+    // `translate(50% 50%)`
   }
 
   render() {
+    // let scale = this._scale()
     return (
       <Drag
         x={this.props.x}
@@ -54,16 +76,24 @@ export default class PanAndZoom extends React.Component {
           }}
           onWheel={this._onMousewheel}
         >
-          {/*The transforms get applied to the inner div*/}
+          {/*The transforms get applied to the inner divs*/}
           <div
-            style={{
-              width: "100%",
-              height: "100%",
-              transformOrigin: "center center",
-              transform: this._transform(),
-            }}
+
           >
-            {this.props.children}
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                // transformOrigin: (
+                //   `calc(50% - ${this.props.x}px) ` +
+                //   `calc(50% - ${this.props.y}px)`
+                // ),
+                // transformOrigin: "center center",
+                transform: this._transform(),
+              }}
+            >
+              {this.props.children}
+            </div>
           </div>
         </div>
       </Drag>

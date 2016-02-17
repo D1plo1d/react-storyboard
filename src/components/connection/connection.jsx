@@ -3,6 +3,7 @@ import {connect} from "react-redux"
 import Drag from "../pan_and_zoom/drag.jsx"
 
 const SNAPPING_DISTANCE = 30
+const CONNECTION_COLOR = "#333"
 
 @connect(
   (state, ownProps) => {
@@ -126,7 +127,7 @@ export default class Connection extends React.Component {
 
   _path() {
     if (!this._initialized()) return ""
-    let p = this._endPoints()
+    let p = this._endPoints().sort((a, b) => a.x - b.x)
     let midpoint = (p[0].x + p[1].x) / 2
     let xOffset = this._offsetOnAxis("x")
     let yOffset = this._offsetOnAxis("y")
@@ -149,8 +150,17 @@ export default class Connection extends React.Component {
         top: this._offsetOnAxis("y") + 2,
         width: -this._offsetOnAxis("x") + this._maxPointOnAxis("x") + 100,
         height: -this._offsetOnAxis("y") + this._maxPointOnAxis("y") + 100,
+        zIndex: 1,
         "WebkitUserSelect": "none",
       }}>
+        <path
+          d={this._path()}
+          style={{
+            fill: "transparent",
+            stroke: CONNECTION_COLOR,
+            strokeWidth: 2,
+          }}
+        />
         {this._endPoints().map(({x, y}, index) =>
           <Drag
             ref={`drag${index}`}
@@ -164,22 +174,17 @@ export default class Connection extends React.Component {
             <circle
               cx={x - this._offsetOnAxis("x")}
               cy={y - this._offsetOnAxis("y")}
-              r="20"
+              r="18"
               style={{
-                fill:"black",
+                fill: "white",
+                stroke: CONNECTION_COLOR,
+                strokeWidth: 2,
                 display: (this._initialized()) ? "block" : "none",
+                zIndex: 2,
               }}
             />
           </Drag>
         )}
-        <path
-          d={this._path()}
-          style={{
-            fill: "transparent",
-            stroke: "black",
-            strokeWidth: 2,
-          }}
-        />
       </svg>
     )
   }
