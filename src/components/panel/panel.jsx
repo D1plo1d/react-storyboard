@@ -4,8 +4,8 @@ import Drag from "../pan_and_zoom/drag.jsx"
 import linkIcon from "./link_icon.svg"
 
 const GRID_SIZE = 20
-const CIRCLE_RADIUS = 40
-const ICON_RADIUS = 30
+const CIRCLE_RADIUS = 20
+const ICON_RADIUS = 15
 const BORDER_WIDTH = 2
 const BORDER_COLOR = "#666"
 const ICON_COLOR = "#444"
@@ -43,6 +43,8 @@ export default class Panel extends React.Component {
       id: this.props.id,
       x: drag.x - drag.x % GRID_SIZE,
       y: drag.y - drag.y % GRID_SIZE,
+      width: 300,
+      height: 300,
     })
   }
 
@@ -93,15 +95,15 @@ export default class Panel extends React.Component {
         </div>
         <div ref="connectionPoint" style={{
           position: "absolute",
-          left: width - CIRCLE_RADIUS / 2 + BORDER_WIDTH * 1.5,
-          top: height / 2 - CIRCLE_RADIUS / 2 + BORDER_WIDTH,
+          left: width - CIRCLE_RADIUS + BORDER_WIDTH * 1.5,
+          top: height / 2 - CIRCLE_RADIUS + BORDER_WIDTH,
         }}
         >
           <svg>
             <circle
-              cx={CIRCLE_RADIUS/2}
-              cy={CIRCLE_RADIUS/2}
-              r={CIRCLE_RADIUS/2 - BORDER_WIDTH}
+              cx={CIRCLE_RADIUS}
+              cy={CIRCLE_RADIUS}
+              r={CIRCLE_RADIUS - BORDER_WIDTH}
               onClick={this.props.onAddConnection}
               style = {{
                 pointer: "cursor",
@@ -111,16 +113,20 @@ export default class Panel extends React.Component {
               }}
             />
           </svg>
-          <div src={linkIcon} style={{
-            background: ICON_COLOR,
-            WebkitMask: `url(${linkIcon}) center / contain no-repeat`,
-            zIndex: 2,
-            width: ICON_RADIUS,
-            height: ICON_RADIUS,
-            position: "absolute",
-            left: (CIRCLE_RADIUS - ICON_RADIUS) / 2 - 1,
-            top: (CIRCLE_RADIUS - ICON_RADIUS) / 2 + 1,
-          }}/>
+          <div
+            onClick={this.props.onAddConnection}
+            style={{
+              background: ICON_COLOR,
+              WebkitMask: `url(${linkIcon}) center / contain no-repeat`,
+              zIndex: 2,
+              width: ICON_RADIUS * 2,
+              height: ICON_RADIUS * 2,
+              position: "absolute",
+              left: CIRCLE_RADIUS - ICON_RADIUS - 1,
+              top: CIRCLE_RADIUS - ICON_RADIUS + 1,
+              pointer: "cursor",
+            }}
+          />
         </div>
       </div>
     )

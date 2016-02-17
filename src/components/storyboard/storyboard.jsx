@@ -1,6 +1,7 @@
 import React from "react"
 import {Provider, connect} from "react-redux"
 import PanAndZoom from "../pan_and_zoom/pan_and_zoom.jsx"
+import Connection from "../connection/connection.jsx"
 import backgroundImage from "./graphy_@2X.png"
 import store from "../../reducers/storyboard.js"
 
@@ -12,7 +13,7 @@ import store from "../../reducers/storyboard.js"
 @connect(
   (state) => {
     return {
-      connections: state.connections,
+      connections: state.connections || {},
     }
   },
 )
@@ -78,6 +79,11 @@ export default class Storyboard extends React.Component {
           zoomFactor={this.state.zoomFactor}
         >
           {this.props.children}
+          {
+            Object.keys(this.props.connections).map((id) =>
+              <Connection id={id} key={`connection-${id}`}/>
+            )
+          }
         </PanAndZoom>
       </div>
     )

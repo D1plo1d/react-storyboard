@@ -20,13 +20,21 @@ let initialState = {
   },
 }
 
+let generateUUID = function() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    let r = Math.random()*16|0
+    let v = c === 'x' ? r : (r&0x3|0x8)
+    return v.toString(16)
+  })
+}
+
 let storyBoard = function(state = initialState, action) {
   switch (action.type) {
   case 'MOVE_PANEL':
-    let {x, y} = action
+    let {x, y, width, height} = action
     state = Object.assign({}, state)
     state.panels = Object.assign({}, state.panels)
-    state.panels[action.id] = {x, y}
+    state.panels[action.id] = {x, y, width, height}
     state.pendingChanges = true
     return state
   case 'WEBSOCKET_CONFIG_UPDATE':
@@ -35,10 +43,11 @@ let storyBoard = function(state = initialState, action) {
     state.saveInterval = setInterval(() => store.dispatch({type: "SAVE"}), 500)
     return state
   case 'ADD_CONNECTION':
+  case 'UPDATE_CONNECTION':
     let {panelIDs} = action
     state = Object.assign({}, state)
     state.connections = Object.assign({}, state.connections)
-    state.connections[action.id] = {panelIDs}
+    state.connections[action.id || generateUUID()] = {panelIDs}
     return state
   case 'SAVE':
     let {panels, connections} = state
