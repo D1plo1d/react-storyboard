@@ -7,5 +7,6 @@ module.exports = (props) => (
   }}>
     <h1>{props.title} - {props.username}</h1>
     <h2>{props.content}</h2>
+    <a href="https://touchbistro.com">Google!</a>
   </div>
 )

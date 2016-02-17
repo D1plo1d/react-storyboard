@@ -33,6 +33,7 @@
     "bootstrap": "*",
     "react-bootstrap": "*",
     "react-redux": "4.4.0",
+    "react-frame-component": "0.5.1",
     "redux": "*",
     "socket.io": "*",
     "socket.io-client": "*",

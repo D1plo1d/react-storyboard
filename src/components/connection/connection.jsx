@@ -45,7 +45,7 @@ export default class Connection extends React.Component {
     this.setState({creationWizardPoints: p})
   }
 
-  _onDrop(pointIndex, {preventDrop}, drag) {
+  _onDrop(pointIndex, drag, {preventDrop}) {
     // TODO: prevent dropping unless there is a snappable panel
     console.log("DROP")
     if (pointIndex === 0) {

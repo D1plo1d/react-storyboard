@@ -130,7 +130,7 @@ export default class Drag extends React.Component {
     let allowed = true
     let preventDrop = () => allowed = false
     try {
-      this.props.onDrop({preventDrop}, nextState)
+      this.props.onDrop(nextState, {preventDrop})
     }
     finally {
       if (!allowed) return

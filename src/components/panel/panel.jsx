@@ -2,6 +2,7 @@ import React from "react"
 import {connect} from "react-redux"
 import Drag from "../pan_and_zoom/drag.jsx"
 import linkIcon from "./link_icon.svg"
+import Frame from 'react-frame-component'
 
 const GRID_SIZE = 20
 const CIRCLE_RADIUS = 20
@@ -86,12 +87,11 @@ export default class Panel extends React.Component {
               {this.props.id}
             </div>
           </Drag>
-          <div ref="content" style={{
+          <Frame ref="content" style={{
             flexGrow: 1,
-            overflow: "hidden",
           }}>
             {this.props.children}
-          </div>
+          </Frame>
         </div>
         <div ref="connectionPoint" style={{
           position: "absolute",
