@@ -23,7 +23,8 @@ export default class Storyboard extends React.Component {
   state = {
     x: 0,
     y: 0,
-    zoomFactor: -2.5,
+    // zoomFactor: -2.5,
+    zoomFactor: 0,
   }
 
   static childContextTypes = {

@@ -29,30 +29,46 @@ let generateUUID = function() {
 }
 
 let storyBoard = function(state = initialState, action) {
+  let id
   switch (action.type) {
   case 'MOVE_PANEL':
     let {x, y, width, height} = action
+    id = action.id
     state = Object.assign({}, state)
     state.panels = Object.assign({}, state.panels)
-    state.panels[action.id] = {x, y, width, height}
+    state.panels[id] = {id, x, y, width, height}
     state.pendingChanges = true
     return state
   case 'WEBSOCKET_CONFIG_UPDATE':
+    let nextStateHash = JSON.stringify(action.state)
+    if (state.savedStateHash === nextStateHash) return state
     state = Object.assign({}, state, action.state)
+    state.savedStateHash = nextStateHash
     state.initialized = true
     state.saveInterval = setInterval(() => store.dispatch({type: "SAVE"}), 500)
     return state
   case 'ADD_CONNECTION':
   case 'UPDATE_CONNECTION':
     let {panelIDs} = action
+    id = action.id || generateUUID()
     state = Object.assign({}, state)
     state.connections = Object.assign({}, state.connections)
-    state.connections[action.id || generateUUID()] = {panelIDs}
+    state.connections[id] = {id, panelIDs}
+    state.pendingChanges = true
     return state
   case 'SAVE':
-    let {panels, connections} = state
+    let state = Object.assign({}, state)
+    let {panels} = state
+    let connections = {}
+    Object.values(state.connections).forEach((connection) => {
+      if (connection.panelIDs.length === 2) {
+        connections[connection.id] = connection
+      }
+    })
     if (state.pendingChanges) {
-      socket.emit("config update", {panels, connections})
+      let packet = {panels, connections}
+      state.savedStateHash = JSON.stringify(packet)
+      socket.emit("config update", packet)
       state.pendingChanges = false
     }
     return state

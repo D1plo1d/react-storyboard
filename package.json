@@ -13,6 +13,7 @@
     "style-loader": "*",
     "stylus-loader": "*",
     "babel": "*",
+    "babel-polyfill": "*",
     "babel-loader": "5.3.3",
     "babel-core": "5.8.33",
     "file-loader": "*",

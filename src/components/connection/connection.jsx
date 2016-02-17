@@ -2,6 +2,8 @@ import React from "react"
 import {connect} from "react-redux"
 import Drag from "../pan_and_zoom/drag.jsx"
 
+const SNAPPING_DISTANCE = 30
+
 @connect(
   (state, ownProps) => {
     let connection = state.connections[ownProps.id]
@@ -11,7 +13,7 @@ import Drag from "../pan_and_zoom/drag.jsx"
   },
   (dispatch) => {
     return {
-      finishWizard: (action) => dispatch(Object.assign(action, {
+      updateConnection: (action) => dispatch(Object.assign(action, {
         type: "UPDATE_CONNECTION",
       })),
     }
@@ -38,30 +40,49 @@ export default class Connection extends React.Component {
   _onDragChange = (pointIndex, drag) => {
     if (this._wizardIsFinished()) return
     let p = new Array(this.state.creationWizardPoints)
-    p[pointIndex] = {
-      x: drag.x,
-      y: drag.y,
+    let panel = this._snappablePanelFor(drag)
+    if (panel == null) {
+      p[pointIndex] = {
+        x: drag.x,
+        y: drag.y,
+      }
+    }
+    else {
+      p[pointIndex] = {
+        x: panel.x + panel.width,
+        y: panel.y + panel.height/2,
+      }
     }
     this.setState({creationWizardPoints: p})
   }
 
   _onDrop(pointIndex, drag, {preventDrop}) {
-    // TODO: prevent dropping unless there is a snappable panel
-    console.log("DROP")
+    let points = this.state.creationWizardPoints
+    let panel = this._snappablePanelFor(points[pointIndex])
+    // prevent dropping unless there is a snappable panel
+    if (panel == null) preventDrop()
     if (pointIndex === 0) {
       this.refs.drag1.simulateMouseDown()
     }
     else {
-      let points = this.state.creationWizardPoints
-      this.props.finishWizard({
+      let panels = this.props.panels.slice(0)
+      panels[pointIndex] = panel
+      this.props.updateConnection({
         id: this.props.id,
-        panelIDs: points.map((point) => this._snappablePanelFor(point).id),
+        panelIDs: panels.map(({id}) => id),
       })
     }
   }
 
   _snappablePanelFor({x, y}) {
-    // TODO!
+    return Object.values(this.props.snappablePanels).find((panel) => {
+      if (this.props.panels.includes(panel)) return false
+      let dist = Math.sqrt(
+        Math.pow(panel.x + panel.width - x, 2) +
+        Math.pow(panel.y + panel.height / 2 - y, 2)
+      )
+      return dist < SNAPPING_DISTANCE * this.context.storyboard.scale
+    })
   }
 
   _initialized() {
@@ -118,7 +139,7 @@ export default class Connection extends React.Component {
   }
 
   render() {
-    console.log("SCALE", this.context.storyboard.scale)
+    // console.log("SCALE", this.context.storyboard.scale)
     return (
       <svg style={{
         position: "absolute",

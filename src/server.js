@@ -41,8 +41,8 @@ io.on('connection', function(socket) {
 })
 
 var watchConfigFile = function() {
-    // On config change update the socket connections
-    fs.watch(configPath, function() { sendConfigDataTo(io)})
+  // On config change update the socket connections
+  fs.watch(configPath, function() { sendConfigDataTo(io)})
 }
 
 try {
