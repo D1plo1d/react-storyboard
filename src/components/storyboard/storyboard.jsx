@@ -13,6 +13,7 @@ import store from "../../reducers/storyboard.js"
 @connect(
   (state) => {
     return {
+      initialized: state.initialized,
       connections: state.connections || {},
     }
   },
@@ -45,6 +46,7 @@ export default class Storyboard extends React.Component {
   }
 
   render() {
+    if (!this.props.initialized) return <div/>
     let scale = this._scale()
     return (
       <div
@@ -53,6 +55,7 @@ export default class Storyboard extends React.Component {
           width: "100%",
           height: "100%",
           userSelect: "none",
+          overflow: "hidden",
         }}
         onWheel={this._onMousewheel}
       >

@@ -53,13 +53,16 @@ export default class Panel extends React.Component {
     let width = 300
     let height = 300
     return (
-      <div style={{
-        position: "absolute",
-        left: this.props.x,
-        top: this.props.y,
-        zIndex: 2,
-        "WebkitUserSelect": "none",
-      }}>
+      <div
+        onMouseDown={(e) => e.stopPropagation()}
+        style={{
+          position: "absolute",
+          left: this.props.x,
+          top: this.props.y,
+          zIndex: 2,
+          "WebkitUserSelect": "none",
+        }}
+      >
         <div style={{
           width: width,
           height: height,
@@ -69,8 +72,8 @@ export default class Panel extends React.Component {
           background: "white",
         }}>
           <Drag
-            x={this.props.x}
-            y={this.props.y}
+            x={this.props.x || 0}
+            y={this.props.y || 0}
             scale={this.context.storyboard.scale}
             onChange={this._onDragChange}
           >
@@ -107,10 +110,10 @@ export default class Panel extends React.Component {
               r={CIRCLE_RADIUS - BORDER_WIDTH}
               onClick={this.props.onAddConnection}
               style = {{
-                pointer: "cursor",
                 fill: "white",
                 stroke: BORDER_COLOR,
                 strokeWidth: BORDER_WIDTH,
+                cursor: "pointer",
               }}
             />
           </svg>
@@ -125,7 +128,7 @@ export default class Panel extends React.Component {
               position: "absolute",
               left: CIRCLE_RADIUS - ICON_RADIUS - 1,
               top: CIRCLE_RADIUS - ICON_RADIUS + 1,
-              pointer: "cursor",
+              cursor: "pointer",
             }}
           />
         </div>

@@ -17,6 +17,9 @@ const CONNECTION_COLOR = "#333"
       updateConnection: (action) => dispatch(Object.assign(action, {
         type: "UPDATE_CONNECTION",
       })),
+      deleteConnection: (action) => dispatch(Object.assign(action, {
+        type: "DELETE_CONNECTION",
+      })),
     }
   }
 )
@@ -139,6 +142,14 @@ export default class Connection extends React.Component {
     )
   }
 
+  _onDragKeyUp(index, e) {
+    const ESC = 27
+    if (e.keyCode === ESC) {
+      // this.refs[`drag${index}`].cancelDrag()
+      this.props.deleteConnection({id: this.props.id})
+    }
+  }
+
   render() {
     // console.log("SCALE", this.context.storyboard.scale)
     return (
@@ -165,11 +176,13 @@ export default class Connection extends React.Component {
           <Drag
             ref={`drag${index}`}
             key={`drag${index}`}
+            Container="g"
             x={x}
             y={y}
             scale={this.context.storyboard.scale}
             onChange={this._onDragChange.bind(this, index)}
             onDrop={this._onDrop.bind(this, index)}
+            onKeyUp={this._onDragKeyUp.bind(this, index)}
           >
             <circle
               cx={x - this._offsetOnAxis("x")}

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 var Server = require("socket.io")
 var fs  = require("fs")
 var http = require("http")
@@ -10,7 +11,10 @@ configPath = configPath || path.join(process.cwd(), "config", "storyboard.yml")
 
 var sendConfigDataTo = function(socket) {
   fs.readFile(configPath, (err, data) => {
-    if (err) data = ""
+    if (err) {
+      console.log("Error: Unable to read config file")
+      data = ""
+    }
     socket.emit("config update",  yaml.safeLoad(data))
   })
 }

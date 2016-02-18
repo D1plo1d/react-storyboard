@@ -8,13 +8,15 @@ let initialState = {
   initialized: false,
   pendingChanges: false,
   panels: {
-    // {
+    // [id]: {
+    //   id: String
     //   x: Number
     //   y: Number
     // }
   },
   connections: {
-    // {
+    // [id]: {
+    //   id: String
     //   panelIDs: [String, String]
     // }
   },
@@ -70,6 +72,11 @@ let storyBoard = function(state = initialState, action) {
     // trigger a save next interval
     state.pendingChanges = true
     return state
+    case 'DELETE_CONNECTION':
+      state = Object.assign({}, state)
+      state.connections = Object.assign({}, state.connections)
+      delete state.connections[action.id]
+      return state
   case 'SAVE':
     let state = Object.assign({}, state)
     let {panels} = state

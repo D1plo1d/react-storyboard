@@ -39,7 +39,8 @@
     "socket.io": "*",
     "socket.io-client": "*",
     "js-yaml": "*",
-    "mathjs": "*"
+    "mathjs": "*",
+    "react-overlays": "*"
   },
   "engines": {
     "node": "~0.12.x",

@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {Portal} from 'react-overlays'
+import KeyboardListener from './keyboard_listener.jsx'
 
 export default class Drag extends React.Component {
   displayName = "Drag"
@@ -11,15 +12,18 @@ export default class Drag extends React.Component {
     y: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
     onDrop: React.PropTypes.func.isRequired,
+    onKeyUp: React.PropTypes.func,
   }
 
   static defaultProps = {
     touch: true,
     scale: 1,
     onDrop: () => {},
+    Container: "div",
   }
 
   state = {
+    isMouseDown: false,
     simulatedMouseDown: false,
     isDragging: false,
     isMoving: false,
@@ -29,61 +33,61 @@ export default class Drag extends React.Component {
     deltaY: 0,
   }
 
-  componentDidMount() {
-    this._toggleListeners("on", this._domNode(), this._localMouseEvents())
-  }
-
-  componentWillUnmount() {
-    this._toggleListeners("off", this._domNode(), this._localMouseEvents())
-    this._toggleListeners("off", document, this._globalMouseEvents())
-  }
-
-  componentWillUpdate(_, nextState) {
-    if (nextState.isDragging !== this.state.isDragging) {
-      let shouldListen = nextState.isDragging || nextState.simulateMouseDown
-      let onOrOff = shouldListen ? "on" : "off"
-      this._toggleListeners(onOrOff, document, this._globalMouseEvents())
+  componentWillReceiveProps(nextProps) {
+    if (this.state.isDragging && nextProps.scale !== this.props.scale) {
+      this._moveOrScale({
+        nextUnscaledX: this.state.unscaledX,
+        nextUnscaledY: this.state.unscaledY,
+        nextProps,
+      })
     }
   }
 
   simulateMouseDown = () => {
-    this.setState({simulatedMouseDown: true}, () => {
-      this._toggleListeners("on", document, this._globalMouseEvents())
+    this.setState({isMouseDown: true, simulatedMouseDown: true})
+  }
+
+  cancelDrag() {
+    this.setState({
+      isMouseDown: false,
+      simulatedMouseDown: false,
+      isDragging: false,
+      isMoving: false,
     })
   }
 
-  _domNode() {
-    return ReactDOM.findDOMNode(this)
-  }
-
-  _localMouseEvents() {
-    let events = {mousedown: this._onMouseDown}
-    if (this.props.touch) events.touchstart = this._onMouseDown
-    return events
-  }
-
-  _globalMouseEvents() {
+  _containerEventListeners() {
     let events = {
-      mousedown: this._stopImmediatePropagation,
-      mouseup: this._onMouseUp,
-      mousemove: this._onMouseMove,
+      onMouseDown: this._onMouseDown,
+      onMouseUp: this._onMouseUp,
+      onMouseMove: this._onMouseMove,
     }
     let touchEvents = {
-      touchstart: this._stopImmediatePropagation,
-      touchend: this._onMouseUp,
-      touchmove: this._onMouseMove,
+      onTouchStart: this._onMouseDown,
+      onTouchEnd: this._onMouseUp,
+      onTouchMove: this._onMouseMove,
     }
     if (this.props.touch) events = Object.assign(events, touchEvents)
     return events
   }
 
-  _toggleListeners(onOrOff, domElement, events) {
-    let add = onOrOff === "on"
-    let fnName = add ? "addEventListener" : "removeEventListener"
-    for(let k in events) domElement[fnName](k, events[k])
+  _overlayEventListeners() {
+    let events = {
+      onMouseDown: this._stopPropagation,
+      onMouseUp: this._onMouseUp,
+      onMouseMove: this._onMouseMove,
+    }
+    let touchEvents = {
+      onTouchStart: this._stopPropagation,
+      onTouchEnd: this._onMouseUp,
+      onTouchMove: this._onMouseMove,
+    }
+    if (this.props.touch) events = Object.assign(events, touchEvents)
+    return events
   }
 
   _onChange(nextState) {
+    if (JSON.stringify(nextState) === JSON.stringify(this.state)) return
     this.setState(nextState, () => this.props.onChange(this.state))
   }
 
@@ -91,6 +95,7 @@ export default class Drag extends React.Component {
     let pt = (e.changedTouches && e.changedTouches[0]) || e
     let {x, y} = {x: pt.clientX, y: pt.clientY}
     this._onChange({
+      simulatedMouseDown: false,
       isDragging: true,
       isMoving: false,
       x: this.props.x,
@@ -102,26 +107,20 @@ export default class Drag extends React.Component {
     })
   }
 
-  _stopImmediatePropagation(e) {
-    e.stopImmediatePropagation()
+  _stopPropagation(e) {
+    e.stopPropagation()
   }
 
   _onMouseDown = (e) => {
-    if (this.state.isDragging || this.state.simulatedMouseDown) {
-      e.stopImmediatePropagation()
-      return
-    }
     // only left mouse button
-    if(!this.props.touch || e.button === 0) {
-      this._startDrag(e)
-      e.stopImmediatePropagation()
-    }
+    if(!this.props.touch || e.button === 0) this.setState({isMouseDown: true})
   }
 
   _onMouseUp = (e) => {
-    if(!this.state.isDragging) return
+    if (!this.state.isDragging) return this.cancelDrag()
     let stateChanges = {
       simulatedMouseDown: false,
+      isMouseDown: false,
       isDragging: false,
       isMoving: false,
     }
@@ -134,40 +133,69 @@ export default class Drag extends React.Component {
     finally {
       if (!allowed) return
       this._onChange(stateChanges)
-      if (e != null) e.stopImmediatePropagation()
+      if (e != null) e.stopPropagation()
     }
   }
 
   _onMouseMove = (e) => {
-    e.stopImmediatePropagation()
     if (!this.state.isDragging) {
-      if (this.state.simulatedMouseDown) {
-        this._startDrag(e)
-      }
+      if (this.state.isMouseDown) this._startDrag(e)
       return
     }
     let pt = (e.changedTouches && e.changedTouches[0]) || e
-    let scale = this.props.scale
-    let previousState = this.state
-    let x = pt.clientX
-    let y = pt.clientY
+    let nextUnscaledX = pt.clientX
+    let nextUnscaledY = pt.clientY
+    this._moveOrScale({nextUnscaledX, nextUnscaledY, nextProps: this.props})
+  }
+
+  _moveOrScale({nextUnscaledX, nextUnscaledY, nextProps}) {
+    let state = this.state
+    // Without next props the dragged panel moves down and to the right when scaling in
+    // nextProps = this.props
     let scaledMovement = {
-      x: (x - previousState.unscaledX) / scale,
-      y: (y - previousState.unscaledY) / scale,
+      x: nextUnscaledX / nextProps.scale - state.unscaledX / this.props.scale,
+      y: nextUnscaledY / nextProps.scale - state.unscaledY / this.props.scale,
     }
-    this._onChange({
+    let nextState = {
       isMoving: true,
-      deltaX: scaledMovement.x + previousState.deltaX,
-      deltaY: scaledMovement.y + previousState.deltaY,
-      x: scaledMovement.x + previousState.x,
-      y: scaledMovement.y + previousState.y,
-      unscaledX: x,
-      unscaledY: y,
-    })
+      deltaX: state.deltaX + scaledMovement.x,
+      deltaY: state.deltaY + scaledMovement.y,
+      x: state.x + scaledMovement.x,
+      y: state.y + scaledMovement.y,
+      unscaledX: nextUnscaledX,
+      unscaledY: nextUnscaledY,
+    }
+    this._onChange(nextState)
+  }
+
+  _renderPortal() {
+    if (!this.state.isDragging && !this.state.simulatedMouseDown) return
+    return (
+      <Portal container={document.body}>
+        <KeyboardListener onKeyUp={this.props.onKeyUp}>
+          <div
+            style = {{
+              position: "fixed",
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+            }}
+            {...this._overlayEventListeners()}
+          />
+        </KeyboardListener>
+      </Portal>
+    )
   }
 
   render() {
-    return React.Children.only(this.props.children)
+    let {Container} = this.props
+    return (
+      <Container {...this._containerEventListeners()}>
+        {this.props.children}
+        {this._renderPortal()}
+      </Container>
+    )
   }
 
 }
