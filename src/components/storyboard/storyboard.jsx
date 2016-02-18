@@ -24,8 +24,8 @@ export default class Storyboard extends React.Component {
   state = {
     x: 0,
     y: 0,
-    // zoomFactor: -2.5,
-    zoomFactor: 0,
+    zoomFactor: -5,
+    // zoomFactor: 0,
   }
 
   static childContextTypes = {
@@ -72,7 +72,7 @@ export default class Storyboard extends React.Component {
             // backgroundPosition: `${-scale}% ${-scale}%`,
             backgroundPositionX: `calc(50% + ${this.state.x * scale}px)`,
             backgroundPositionY: `calc(50% + ${this.state.y * scale}px)`,
-            backgroundSize: `${40 * scale}px`,
+            backgroundSize: `${400 * scale}px`,
             zIndex: -1,
           }}
         />

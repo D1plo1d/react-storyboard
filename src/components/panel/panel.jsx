@@ -6,9 +6,9 @@ import Frame from 'react-frame-component'
 import ResizeHandle from './_resize_handle.jsx'
 
 const GRID_SIZE = 20
-const CIRCLE_RADIUS = 20
-const ICON_RADIUS = 15
-const BORDER_WIDTH = 2
+const CIRCLE_RADIUS = 60
+const ICON_RADIUS = 50
+const BORDER_WIDTH = 5
 const BORDER_COLOR = "#666"
 const ICON_COLOR = "#444"
 
@@ -86,7 +86,7 @@ export default class Panel extends React.Component {
           color: "white",
           padding: "5 5",
           fontFamily: "sans-serif",
-          fontSize: "15px",
+          fontSize: `40px`,
           fontWeight: "lighter",
           letterSpacing: "0.1em",
           userSelect: "none",
@@ -95,6 +95,7 @@ export default class Panel extends React.Component {
           {this.props.id}
           <div style={{
             float: "right",
+            background: "#444",
           }}>
             ({this.props.width}x{this.props.height})
           </div>

@@ -85,7 +85,7 @@ export default class Connection extends React.Component {
         Math.pow(panel.x + panel.width - x, 2) +
         Math.pow(panel.y + panel.height / 2 - y, 2)
       )
-      return dist < SNAPPING_DISTANCE * this.context.storyboard.scale
+      return dist < SNAPPING_DISTANCE / this.context.storyboard.scale
     })
   }
 
@@ -170,7 +170,7 @@ export default class Connection extends React.Component {
           style={{
             fill: "transparent",
             stroke: CONNECTION_COLOR,
-            strokeWidth: 2,
+            strokeWidth: this.context.storyboard.scale < 0.5 ? 6 : 2,
           }}
         />
         {this._endPoints().map(({x, y}, index) =>
