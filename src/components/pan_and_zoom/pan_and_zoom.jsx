@@ -74,7 +74,7 @@ export default class PanAndZoom extends React.Component {
           }}
           onWheel={this._onMousewheel}
         >
-          {/*The transforms get applied to the inner div*/}
+          {/*The transform gets applied to the inner div*/}
           <div
             style={{
               width: "100%",
