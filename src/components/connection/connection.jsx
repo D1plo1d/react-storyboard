@@ -153,7 +153,6 @@ export default class Connection extends React.Component {
   }
 
   render() {
-    // console.log("SCALE", this.context.storyboard.scale)
     return (
       <svg style={{
         position: "absolute",
