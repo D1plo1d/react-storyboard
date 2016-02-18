@@ -50,7 +50,6 @@ export default class PanAndZoom extends React.Component {
       [0, 0, 0, 1],
     ])
     let matrix = math.multiply(translate, scale)
-    // console.log(translate.toArray())
     return (
       `matrix3d(${
         matrix.toArray().reduce((a, b) => a.concat(b)).join(",")
@@ -59,7 +58,6 @@ export default class PanAndZoom extends React.Component {
   }
 
   render() {
-    // let scale = this._scale()
     return (
       <Drag
         x={this.props.x}
@@ -76,24 +74,16 @@ export default class PanAndZoom extends React.Component {
           }}
           onWheel={this._onMousewheel}
         >
-          {/*The transforms get applied to the inner divs*/}
+          {/*The transforms get applied to the inner div*/}
           <div
-
+            style={{
+              width: "100%",
+              height: "100%",
+              transformOrigin: "center center",
+              transform: this._transform(),
+            }}
           >
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                // transformOrigin: (
-                //   `calc(50% - ${this.props.x}px) ` +
-                //   `calc(50% - ${this.props.y}px)`
-                // ),
-                transformOrigin: "center center",
-                transform: this._transform(),
-              }}
-            >
-              {this.props.children}
-            </div>
+            {this.props.children}
           </div>
         </div>
       </Drag>
