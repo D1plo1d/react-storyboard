@@ -90,12 +90,11 @@ export default class Drag extends React.Component {
   _startDrag(e) {
     let pt = (e.changedTouches && e.changedTouches[0]) || e
     let {x, y} = {x: pt.clientX, y: pt.clientY}
-    let scale = this.props.scale
     this._onChange({
       isDragging: true,
       isMoving: false,
-      x: this.props.x * scale,
-      y: this.props.y * scale,
+      x: this.props.x,
+      y: this.props.y,
       unscaledX: x,
       unscaledY: y,
       deltaX: 0,

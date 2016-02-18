@@ -67,8 +67,8 @@ export default class Storyboard extends React.Component {
             backgroundRepeat: "repeat",
             backgroundImage: `url(${backgroundImage})`,
             // backgroundPosition: `${-scale}% ${-scale}%`,
-            backgroundPositionX: `calc(50% + ${this.state.x}px)`,
-            backgroundPositionY: `calc(50% + ${this.state.y}px)`,
+            backgroundPositionX: `calc(50% + ${this.state.x * scale}px)`,
+            backgroundPositionY: `calc(50% + ${this.state.y * scale}px)`,
             backgroundSize: `${40 * scale}px`,
             zIndex: -1,
           }}

@@ -38,25 +38,24 @@ export default class PanAndZoom extends React.Component {
 
   _transform() {
     let translate = math.matrix([
-      [1, 0, this.props.x],
-      [0, 1, this.props.y],
-      [0, 0, 1],
+      [1, 0, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 1, 0],
+      [this.props.x, this.props.y, 0, 1],
     ])
     let scale = math.matrix([
-      [this._scale(), 0, 0],
-      [0, this._scale(), 0],
-      [0, 0, 1],
+      [this._scale(), 0, 0, 0],
+      [0, this._scale(), 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 1],
     ])
     let matrix = math.multiply(translate, scale)
-    console.log(translate.toArray())
+    // console.log(translate.toArray())
     return (
-      `matrix(${
-        translate.toArray().reduce((a, b) => a.concat(b)).slice(0, 6).join(",")
+      `matrix3d(${
+        matrix.toArray().reduce((a, b) => a.concat(b)).join(",")
       })`
     )
-      // `scale(${scale}) ` +
-      // `translate(${this.props.x / scale}px, ${this.props.y / scale}px) `
-    // `translate(50% 50%)`
   }
 
   render() {
@@ -65,6 +64,7 @@ export default class PanAndZoom extends React.Component {
       <Drag
         x={this.props.x}
         y={this.props.y}
+        scale={this._scale()}
         data={this.state.drag}
         onChange={this._onDragChange}
       >
@@ -88,7 +88,7 @@ export default class PanAndZoom extends React.Component {
                 //   `calc(50% - ${this.props.x}px) ` +
                 //   `calc(50% - ${this.props.y}px)`
                 // ),
-                // transformOrigin: "center center",
+                transformOrigin: "center center",
                 transform: this._transform(),
               }}
             >
