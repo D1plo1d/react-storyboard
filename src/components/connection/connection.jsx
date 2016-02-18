@@ -144,10 +144,12 @@ export default class Connection extends React.Component {
 
   _onDragKeyUp(index, e) {
     const ESC = 27
-    if (e.keyCode === ESC) {
-      // this.refs[`drag${index}`].cancelDrag()
-      this.props.deleteConnection({id: this.props.id})
-    }
+    if (e.keyCode === ESC) this._cancelDrag()
+  }
+
+  _cancelDrag = () => {
+    // this.refs[`drag${index}`].cancelDrag()
+    this.props.deleteConnection({id: this.props.id})
   }
 
   render() {
@@ -183,6 +185,7 @@ export default class Connection extends React.Component {
             onChange={this._onDragChange.bind(this, index)}
             onDrop={this._onDrop.bind(this, index)}
             onKeyUp={this._onDragKeyUp.bind(this, index)}
+            onWheel={this._cancelDrag}
           >
             <circle
               cx={x - this._offsetOnAxis("x")}

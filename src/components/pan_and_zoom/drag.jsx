@@ -13,6 +13,9 @@ export default class Drag extends React.Component {
     onChange: React.PropTypes.func.isRequired,
     onDrop: React.PropTypes.func.isRequired,
     onKeyUp: React.PropTypes.func,
+    onKeyDown: React.PropTypes.func,
+    onKeyPress: React.PropTypes.func,
+    onWheel: React.PropTypes.func,
   }
 
   static defaultProps = {
@@ -76,6 +79,7 @@ export default class Drag extends React.Component {
       onMouseDown: this._stopPropagation,
       onMouseUp: this._onMouseUp,
       onMouseMove: this._onMouseMove,
+      onWheel: this.props.onWheel,
     }
     let touchEvents = {
       onTouchStart: this._stopPropagation,
@@ -172,7 +176,11 @@ export default class Drag extends React.Component {
     if (!this.state.isDragging && !this.state.simulatedMouseDown) return
     return (
       <Portal container={document.body}>
-        <KeyboardListener onKeyUp={this.props.onKeyUp}>
+        <KeyboardListener
+          onKeyUp={this.props.onKeyUp}
+          onKeyDown={this.props.onKeyDown}
+          onKeyPress={this.props.onKeyPress}
+        >
           <div
             style = {{
               position: "fixed",

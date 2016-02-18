@@ -72,10 +72,12 @@ export default class Panel extends React.Component {
           background: "white",
         }}>
           <Drag
+            ref="drag"
             x={this.props.x || 0}
             y={this.props.y || 0}
             scale={this.context.storyboard.scale}
             onChange={this._onDragChange}
+            onWheel={() => this.refs.drag.cancelDrag()}
           >
             <div ref="header" style={{
               background: "#444",
