@@ -77,9 +77,12 @@ export default class PanAndZoom extends React.Component {
           {/*The transform gets applied to the inner div*/}
           <div
             style={{
+              "position": "absolute",
+              left: "50%",
+              top: "50%",
               width: "100%",
               height: "100%",
-              transformOrigin: "center center",
+              transformOrigin: "0 0",
               transform: this._transform(),
             }}
           >

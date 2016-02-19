@@ -2,8 +2,11 @@ import React from "react"
 import {connect} from "react-redux"
 import Drag from "../pan_and_zoom/drag.jsx"
 
-const SNAPPING_DISTANCE = 30
-const CONNECTION_COLOR = "#333"
+const CIRCLE_SIZE = 60
+const SNAPPING_DISTANCE = 20
+const CONNECTION_COLOR = "#666"
+const BORDER_WIDTH = 5
+const LINE_WIDTH = 6
 
 @connect(
   (state, ownProps) => {
@@ -157,9 +160,9 @@ export default class Connection extends React.Component {
       <svg style={{
         position: "absolute",
         // Offset by the panel border width
-        left: this._offsetOnAxis("x") + 2,
+        left: this._offsetOnAxis("x") + BORDER_WIDTH,
         // Offset by the panel border width
-        top: this._offsetOnAxis("y") + 2,
+        top: this._offsetOnAxis("y") + BORDER_WIDTH,
         width: -this._offsetOnAxis("x") + this._maxPointOnAxis("x") + 100,
         height: -this._offsetOnAxis("y") + this._maxPointOnAxis("y") + 100,
         zIndex: 1,
@@ -170,7 +173,7 @@ export default class Connection extends React.Component {
           style={{
             fill: "transparent",
             stroke: CONNECTION_COLOR,
-            strokeWidth: this.context.storyboard.scale < 0.5 ? 6 : 2,
+            strokeWidth: LINE_WIDTH,
           }}
         />
         {this._endPoints().map(({x, y}, index) =>
@@ -189,11 +192,11 @@ export default class Connection extends React.Component {
             <circle
               cx={x - this._offsetOnAxis("x")}
               cy={y - this._offsetOnAxis("y")}
-              r="18"
+              r={CIRCLE_SIZE}
               style={{
                 fill: "white",
                 stroke: CONNECTION_COLOR,
-                strokeWidth: 2,
+                strokeWidth: BORDER_WIDTH,
                 display: (this._initialized()) ? "block" : "none",
                 zIndex: 2,
               }}

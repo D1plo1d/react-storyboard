@@ -25,7 +25,6 @@ export default class Storyboard extends React.Component {
     x: 0,
     y: 0,
     zoomFactor: -5,
-    // zoomFactor: 0,
   }
 
   static childContextTypes = {
@@ -33,7 +32,10 @@ export default class Storyboard extends React.Component {
   }
 
   getChildContext() {
-    return {storyboard: {scale: this._scale()}}
+    return {storyboard: {
+      scale: this._scale(),
+      zoomTo: ({x, y, zoomFactor}) => this.setState({x, y, zoomFactor}),
+    }}
   }
 
   _onPanOrZoom = (nextState) => {

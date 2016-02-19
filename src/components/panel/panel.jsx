@@ -9,12 +9,13 @@ const GRID_SIZE = 20
 const CIRCLE_RADIUS = 60
 const ICON_RADIUS = 50
 const BORDER_WIDTH = 5
+const FONT_SIZE = 70
 const BORDER_COLOR = "#666"
 const ICON_COLOR = "#444"
 
 @connect(
   (state, ownProps) => {
-    let defaults = {x: 0, y: 0, width: 1920, height: 1080}
+    let defaults = {x: 0, y: 0, width: 1170, height: 600}
     let panel = state.panels[ownProps.id]
 
     let {x, y, width, height} = panel || defaults
@@ -71,6 +72,14 @@ export default class Panel extends React.Component {
     })
   }
 
+  _zoomToPanel = () => {
+    this.context.storyboard.zoomTo({
+      x: -this.props.x - this.props.width / 2,
+      y: -this.props.y - this.props.height / 2,
+      zoomFactor: -1,
+    })
+  }
+
   _renderHeader() {
     return (
       <Drag
@@ -81,22 +90,30 @@ export default class Panel extends React.Component {
         onChange={this._onDragChange}
         onWheel={() => this.refs.drag.cancelDrag()}
       >
-        <div ref="header" style={{
+        <div ref="header" onDoubleClick={this._zoomToPanel} style={{
+          display: "flex",
+          flexDirection: "row",
           background: "#444",
           color: "white",
-          padding: "5 5",
+          padding: "5 10",
           fontFamily: "sans-serif",
-          fontSize: `40px`,
+          fontSize: `${FONT_SIZE}px`,
           fontWeight: "lighter",
           letterSpacing: "0.1em",
           userSelect: "none",
           cursor: "pointer",
+          textOverflow: "ellipsis",
+          width: this.props.width,
         }}>
-          {this.props.id}
           <div style={{
-            float: "right",
-            background: "#444",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            minWidth: 0,
+            flexGrow: 1,
           }}>
+            {this.props.id}
+          </div>
+          <div>
             ({this.props.width}x{this.props.height})
           </div>
         </div>
@@ -161,17 +178,14 @@ export default class Panel extends React.Component {
         }}
       >
         <div style={{
-          width: width,
-          height: height,
-          display: "flex",
-          flexDirection: "column",
           border: `${BORDER_WIDTH}px solid ${BORDER_COLOR}`,
           background: "white",
           cursor: "pointer",
         }}>
           {this._renderHeader()}
           <Frame ref="content" style={{
-            flexGrow: 1,
+            width: width,
+            height: height,
           }}>
             {this.props.children}
           </Frame>
