@@ -4,6 +4,7 @@ import PanAndZoom from "../pan_and_zoom/pan_and_zoom.jsx"
 import Connection from "../connection/connection.jsx"
 import backgroundImage from "./graphy_@2X.png"
 import store from "../../reducers/storyboard.js"
+import {Motion, spring} from "react-motion"
 
 @((Component) => (ownProps) => // eslint-disable-line react/display-name
   <Provider store={store}>
@@ -43,55 +44,65 @@ export default class Storyboard extends React.Component {
     this.setState(nextState)
   }
 
-  _scale() {
-    return PanAndZoom.defaultProps.zoomScaling(this.state.zoomFactor)
+  _scale(zoomFactor = this.state.zoomFactor) {
+    return PanAndZoom.defaultProps.zoomScaling(zoomFactor)
   }
 
   render() {
     if (!this.props.initialized) return <div/>
-    let scale = this._scale()
     return (
-      <div
-        ref="container"
-        style={{
-          width: "100%",
-          height: "100%",
-          userSelect: "none",
-          overflow: "hidden",
+      <Motion style={{
+        x: spring(this.state.x, {stiffness: 150}),
+        y: spring(this.state.y, {stiffness: 150}),
+        zoomFactor: spring(this.state.zoomFactor, {stiffness: 250}),
+      }}>
+        {({x, y, zoomFactor}) => {
+          let scale = this._scale(zoomFactor)
+          return (
+            <div
+              ref="container"
+              style={{
+                width: "100%",
+                height: "100%",
+                userSelect: "none",
+                overflow: "hidden",
+              }}
+              onWheel={this._onMousewheel}
+            >
+              <div
+                ref="background-image"
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  // marginTop: this.state.y * scale,
+                  // marginLeft: this.state.x * scale,
+                  backgroundRepeat: "repeat",
+                  backgroundImage: `url(${backgroundImage})`,
+                  // backgroundPosition: `${-scale}% ${-scale}%`,
+                  backgroundPositionX: `calc(50% + ${x * scale}px)`,
+                  backgroundPositionY: `calc(50% + ${y * scale}px)`,
+                  backgroundSize: `${400 * scale}px`,
+                  zIndex: -1,
+                }}
+              />
+              <PanAndZoom
+                onChange={this._onPanOrZoom}
+                x={x}
+                y={y}
+                zoomFactor={zoomFactor}
+              >
+                {this.props.children}
+                {
+                  Object.keys(this.props.connections).map((id) =>
+                    <Connection id={id} key={`connection-${id}`}/>
+                  )
+                }
+              </PanAndZoom>
+            </div>
+          )
         }}
-        onWheel={this._onMousewheel}
-      >
-        <div
-          ref="background-image"
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            // marginTop: this.state.y * scale,
-            // marginLeft: this.state.x * scale,
-            backgroundRepeat: "repeat",
-            backgroundImage: `url(${backgroundImage})`,
-            // backgroundPosition: `${-scale}% ${-scale}%`,
-            backgroundPositionX: `calc(50% + ${this.state.x * scale}px)`,
-            backgroundPositionY: `calc(50% + ${this.state.y * scale}px)`,
-            backgroundSize: `${400 * scale}px`,
-            zIndex: -1,
-          }}
-        />
-        <PanAndZoom
-          onChange={this._onPanOrZoom}
-          x={this.state.x}
-          y={this.state.y}
-          zoomFactor={this.state.zoomFactor}
-        >
-          {this.props.children}
-          {
-            Object.keys(this.props.connections).map((id) =>
-              <Connection id={id} key={`connection-${id}`}/>
-            )
-          }
-        </PanAndZoom>
-      </div>
+      </Motion>
     )
   }
 

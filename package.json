@@ -40,7 +40,8 @@
     "socket.io-client": "*",
     "js-yaml": "*",
     "mathjs": "*",
-    "react-overlays": "*"
+    "react-overlays": "*",
+    "react-motion": "*"
   },
   "engines": {
     "node": "~0.12.x",

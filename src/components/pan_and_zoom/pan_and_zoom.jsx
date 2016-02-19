@@ -23,7 +23,7 @@ export default class PanAndZoom extends React.Component {
     let delta = Math.max(-1, Math.min(1, e.deltaY))
     if (delta === 0) return
     this.setState((_, previousProps) => {
-      this.props.onChange({zoomFactor: previousProps.zoomFactor + delta*0.1})
+      this.props.onChange({zoomFactor: previousProps.zoomFactor + delta*0.5})
       return {}
     })
   }
