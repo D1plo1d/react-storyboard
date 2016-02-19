@@ -6,7 +6,18 @@
   "scripts": {
     "start": "STORYBOARD_PATH=./example/config.yml ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config=./webpack.example.config.js"
   },
-  "dependencies": {
+  "peerDependencies": {
+    "react-redux": ">=4.4.0",
+    "react-frame-component": ">=0.5.1",
+    "redux": "*",
+    "socket.io": "*",
+    "socket.io-client": "*",
+    "js-yaml": "*",
+    "mathjs": "*",
+    "react-overlays": "*",
+    "react-motion": "*"
+  },
+  "devDependencies": {
     "webpack": "*",
     "webpack-dev-server": "*",
     "css-loader": "*",
@@ -30,11 +41,8 @@
     "eslint": "2.0.0-beta.3",
     "eslint-plugin-react": "3.16.1",
     "babel-eslint": "*",
-    "classnames": "*",
-    "bootstrap": "*",
-    "react-bootstrap": "*",
-    "react-redux": "4.4.0",
-    "react-frame-component": "0.5.1",
+    "react-redux": ">=4.4.0",
+    "react-frame-component": ">=0.5.1",
     "redux": "*",
     "socket.io": "*",
     "socket.io-client": "*",
