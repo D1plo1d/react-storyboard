@@ -9,9 +9,10 @@ const GRID_SIZE = 20
 const CIRCLE_RADIUS = 60
 const ICON_RADIUS = 50
 const BORDER_WIDTH = 5
-const FONT_SIZE = 70
+const FONT_SIZE = 60
 const BORDER_COLOR = "#666"
 const ICON_COLOR = "#444"
+const HEADER_PADDING = {x: 5, y: 10}
 
 @connect(
   (state, ownProps) => {
@@ -95,11 +96,7 @@ export default class Panel extends React.Component {
           flexDirection: "row",
           background: "#444",
           color: "white",
-          padding: "5 10",
-          fontFamily: "sans-serif",
-          fontSize: `${FONT_SIZE}px`,
-          fontWeight: "lighter",
-          letterSpacing: "0.1em",
+          padding: `${HEADER_PADDING.x} ${HEADER_PADDING.y}`,
           userSelect: "none",
           cursor: "pointer",
           textOverflow: "ellipsis",
@@ -122,13 +119,16 @@ export default class Panel extends React.Component {
   }
 
   _renderConnectionPoint() {
-    let width = this.props.width
-    let height = this.props.height
+    let topOffset = (
+      CIRCLE_RADIUS + BORDER_WIDTH * 0.5 + 10 - HEADER_PADDING.y * 2
+    )
     return (
       <div ref="connectionPoint" style={{
         position: "absolute",
-        left: width - CIRCLE_RADIUS + BORDER_WIDTH * 1.5,
-        top: height / 2 - CIRCLE_RADIUS + BORDER_WIDTH,
+        right: -CIRCLE_RADIUS,
+        top: `calc(50% + 0.5em - ${topOffset}px)`,
+        width: CIRCLE_RADIUS*2,
+        height: CIRCLE_RADIUS*2,
       }}
       >
         <svg>
@@ -172,8 +172,12 @@ export default class Panel extends React.Component {
         style={{
           position: "absolute",
           left: this.props.x,
-          top: this.props.y,
+          top: `calc(${this.props.y - HEADER_PADDING.y*2}px - 1em)`,
           zIndex: 2,
+          fontFamily: "sans-serif",
+          fontSize: `${FONT_SIZE}px`,
+          fontWeight: "lighter",
+          letterSpacing: "0.1em",
           "WebkitUserSelect": "none",
         }}
       >
@@ -186,6 +190,7 @@ export default class Panel extends React.Component {
           <Frame ref="content" style={{
             width: width,
             height: height,
+            border: "none",
           }}>
             {this.props.children}
           </Frame>
