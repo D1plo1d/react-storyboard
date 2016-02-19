@@ -44,7 +44,7 @@ export default class Panel extends React.Component {
   componentWillMount() {
     // Create the panel in the store if it doesn't already exist
     if (this.props.initialized === false) {
-      let {x, y, width, height} = this.props
+      let {id, x, y, width, height} = this.props
       this.props.onChange({id, x, y, width, height})
     }
   }
