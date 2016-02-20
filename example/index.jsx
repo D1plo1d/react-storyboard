@@ -5,6 +5,7 @@ import {Storyboard, Panel} from "react-storyboard"
 import Comment from "./comment.jsx"
 import CommentForm from "./comment_form.jsx"
 import loremIpsum from "./lorem-ipsum.jsx"
+import "bootstrap/dist/css/bootstrap.css"
 
 export default class ExampleStoryboard extends React.Component {
   displayName = "ExampleStoryboard"

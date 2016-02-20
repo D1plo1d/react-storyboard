@@ -13,6 +13,8 @@ const FONT_SIZE = 60
 const BORDER_COLOR = "#666"
 const ICON_COLOR = "#444"
 const HEADER_PADDING = {x: 5, y: 10}
+const headElement = document.getElementsByTagName("head")[0]
+const styleElements = headElement.getElementsByTagName("style")
 
 @connect(
   (state, ownProps) => {
@@ -187,11 +189,17 @@ export default class Panel extends React.Component {
           cursor: "pointer",
         }}>
           {this._renderHeader()}
-          <Frame ref="content" style={{
-            width: width,
-            height: height,
-            border: "none",
-          }}>
+          <Frame
+            ref="content"
+            style={{
+              width: width,
+              height: height,
+              border: "none",
+            }}
+          >
+            <style>
+              {new Array(...styleElements).map((el) => el.innerText).join("\n")}
+            </style>
             {this.props.children}
           </Frame>
         </div>

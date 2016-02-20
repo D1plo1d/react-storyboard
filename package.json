@@ -49,7 +49,8 @@
     "js-yaml": "*",
     "mathjs": "*",
     "react-overlays": "*",
-    "react-motion": "*"
+    "react-motion": "*",
+    "bootstrap": "*"
   },
   "engines": {
     "node": "~0.12.x",
