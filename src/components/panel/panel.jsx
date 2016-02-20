@@ -122,7 +122,7 @@ export default class Panel extends React.Component {
 
   _renderConnectionPoint() {
     let topOffset = (
-      CIRCLE_RADIUS + BORDER_WIDTH * 0.5 + 10 - HEADER_PADDING.y * 2
+      CIRCLE_RADIUS + BORDER_WIDTH * 0.5 + 15 - HEADER_PADDING.y * 2
     )
     return (
       <div ref="connectionPoint" style={{
