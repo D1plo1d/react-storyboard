@@ -2,7 +2,7 @@ var path = require("path")
 
 module.exports = {
   entry: [
-    "./src/index.jsx"
+    "./src/index.jsx",
   ],
   output: {
     path: "./",
@@ -26,8 +26,9 @@ module.exports = {
       },
       {
         test:/\.jsx?$/,
-        exclude: /^(node_modules|dist|scripts|assets)/,
-        include: path.join(__dirname, 'src'),
+        include: [
+          path.resolve(__dirname, "src"),
+        ],
         loaders: [
           'babel?stage=0',
         ],
@@ -39,5 +40,5 @@ module.exports = {
     ],
   },
   plugins: [
-  ]
+  ],
 }
