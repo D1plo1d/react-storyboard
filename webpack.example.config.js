@@ -35,13 +35,12 @@ module.exports = {
       },
       {
         test:/\.jsx?$/,
-        include: [
-          path.resolve(__dirname, "src"),
-          path.resolve(__dirname, "example"),
-        ],
-        loaders: [
-          'babel?stage=0',
-        ],
+        // include: [
+        //   path.resolve(__dirname, "src"),
+        //   path.resolve(__dirname, "example"),
+        //   /react\-redux/,
+        // ],
+        loader: 'babel',
       },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)|\.png($|\?)/,

@@ -8,25 +8,7 @@ const CONNECTION_COLOR = "#666"
 const BORDER_WIDTH = 5
 const LINE_WIDTH = 6
 
-@connect(
-  (state, ownProps) => {
-    let connection = state.connections[ownProps.id]
-    let panels = connection.panelIDs.map((id) => state.panels[id])
-    let snappablePanels = state.panels
-    return {panels, snappablePanels}
-  },
-  (dispatch) => {
-    return {
-      updateConnection: (action) => dispatch(Object.assign(action, {
-        type: "UPDATE_CONNECTION",
-      })),
-      deleteConnection: (action) => dispatch(Object.assign(action, {
-        type: "DELETE_CONNECTION",
-      })),
-    }
-  }
-)
-export default class Connection extends React.Component {
+class Connection extends React.Component {
   displayName = "Panel"
 
   static contextTypes = {
@@ -208,3 +190,22 @@ export default class Connection extends React.Component {
   }
 
 }
+
+export default connect(
+  (state, ownProps) => {
+    let connection = state.connections[ownProps.id]
+    let panels = connection.panelIDs.map((id) => state.panels[id])
+    let snappablePanels = state.panels
+    return {panels, snappablePanels}
+  },
+  (dispatch) => {
+    return {
+      updateConnection: (action) => dispatch(Object.assign(action, {
+        type: "UPDATE_CONNECTION",
+      })),
+      deleteConnection: (action) => dispatch(Object.assign(action, {
+        type: "DELETE_CONNECTION",
+      })),
+    }
+  }
+)(Connection)

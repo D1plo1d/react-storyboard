@@ -29,9 +29,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, "src"),
         ],
-        loaders: [
-          'babel?stage=0',
-        ],
+        loader: 'babel',
       },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)|\.png($|\?)/,

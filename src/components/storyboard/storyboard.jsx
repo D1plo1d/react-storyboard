@@ -6,20 +6,7 @@ import backgroundImage from "./graphy_@2X.png"
 import store from "../../reducers/storyboard.js"
 import {Motion, spring} from "react-motion"
 
-@((Component) => (ownProps) => // eslint-disable-line react/display-name
-  <Provider store={store}>
-    <Component {...ownProps}/>
-  </Provider>
-)
-@connect(
-  (state) => {
-    return {
-      initialized: state.initialized,
-      connections: state.connections || {},
-    }
-  },
-)
-export default class Storyboard extends React.Component {
+class Storyboard extends React.Component {
   displayName = "Storyboard"
 
   state = {
@@ -107,3 +94,20 @@ export default class Storyboard extends React.Component {
   }
 
 }
+
+let providerHOC = (Component) => (ownProps) => ( // eslint-disable-line react/display-name
+  <Provider store={store}>
+    <Component {...ownProps} store={store}/>
+  </Provider>
+)
+
+export default providerHOC(
+  connect(
+    (state) => {
+      return {
+        initialized: state.initialized,
+        connections: state.connections || {},
+      }
+    },
+  )(Storyboard)
+)

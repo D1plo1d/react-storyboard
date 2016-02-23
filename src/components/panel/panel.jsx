@@ -16,27 +16,7 @@ const HEADER_PADDING = {x: 5, y: 10}
 const headElement = document.getElementsByTagName("head")[0]
 const styleElements = headElement.getElementsByTagName("style")
 
-@connect(
-  (state, ownProps) => {
-    let defaults = {x: 0, y: 0, width: 1170, height: 600}
-    let panel = state.panels[ownProps.id]
-
-    let {x, y, width, height} = panel || defaults
-    return {x, y, width, height, initialized: panel != null}
-  },
-  (dispatch, ownProps) => {
-    return {
-      onChange: (action) => dispatch(Object.assign(action, {
-        type: "MOVE_PANEL",
-      })),
-      onAddConnection: () => dispatch({
-        type: "ADD_CONNECTION",
-        panelIDs: [ownProps.id],
-      }),
-    }
-  }
-)
-export default class Panel extends React.Component {
+class Panel extends React.Component {
   displayName = "Panel"
 
   static contextTypes = {
@@ -215,3 +195,24 @@ export default class Panel extends React.Component {
   }
 
 }
+
+export default connect(
+  (state, ownProps) => {
+    let defaults = {x: 0, y: 0, width: 1170, height: 600}
+    let panel = state.panels[ownProps.id]
+
+    let {x, y, width, height} = panel || defaults
+    return {x, y, width, height, initialized: panel != null}
+  },
+  (dispatch, ownProps) => {
+    return {
+      onChange: (action) => dispatch(Object.assign(action, {
+        type: "MOVE_PANEL",
+      })),
+      onAddConnection: () => dispatch({
+        type: "ADD_CONNECTION",
+        panelIDs: [ownProps.id],
+      }),
+    }
+  }
+)(Panel)
