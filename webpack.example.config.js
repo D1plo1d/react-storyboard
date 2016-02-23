@@ -5,7 +5,7 @@ module.exports = {
   entry: [
     // 'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
     // 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-    "./example/index.jsx"
+    "./example/index.jsx",
   ],
   output: {
     path: "./example",
@@ -17,11 +17,11 @@ module.exports = {
       path.join(__dirname, "example"),
     ],
     alias: {
-      "react-storyboard": path.join(__dirname, "./src/index.jsx")
-    }
+      "react-storyboard": path.join(__dirname, "./src/index.jsx"),
+    },
   },
   devServer: {
-    contentBase: "./example"
+    contentBase: "./example",
   },
   module: {
     loaders: [
